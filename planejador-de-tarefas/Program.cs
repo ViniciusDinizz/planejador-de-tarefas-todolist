@@ -113,9 +113,9 @@ internal class Program
         Console.Write("### Cadastrando Tarefa ###\n\nQual a descricao da tarefa: ");
         var description = Console.ReadLine().ToUpper();
         Console.Write("\nQual o proprietário: ");
-        int people = ChosingOwner(person);
+        var people = ChosingOwner(person);
 
-        if (people == -1)
+        if (person.Count == 0)
         {
             Console.Write("\nNão é possivel concluir a tarefa sem proprietário...");
             Thread.Sleep(2000);
@@ -123,7 +123,7 @@ internal class Program
         }
         else
         {
-            _unfishinedTask.Add(new ToDoList(description, person[people]));
+            _unfishinedTask.Add(new ToDoList(description, people));
             Console.Write("\nCriando tarefa...");
             Thread.Sleep(2000);
         }
@@ -139,7 +139,7 @@ internal class Program
     }
 
     //Cria o objeto do tipo Person caso não tenha, e seta o proprietário da tarefa. Utilizada na função "CreateTask"
-    public static int ChosingOwner(List<Person> person)
+    public static Person ChosingOwner(List<Person> person)
     {
         int index = 0;
         if (person.Count == 0)
@@ -153,7 +153,7 @@ internal class Program
             }
             else
             {
-                return -1;
+                return null;
             }
         }
         Console.Clear();
@@ -167,35 +167,41 @@ internal class Program
             Console.Write("\n\nDigite o Id do proprietário: ");
             var checId = Console.ReadLine().ToUpper();
 
-            for (int i = 0; i < person.Count; i++)
+            foreach (var i in person)
             {
-                if (person[i]._id == checId)
+                if (i._id == checId)
                 {
-                    check = true;
-                    index = i;
+                    return i;
                 }
-            }
-            if(index == 0)
-            {
-                Console.Write("ID incorreto...");
-                Thread.Sleep(1000);
-                index = -1;
+                else
+                {
+                    Console.WriteLine("Id não encontrado");
+                    Thread.Sleep(1000);
+                }
             }
         }
 
-        return index;
+        return null;
     }
 
     //Menu de opções exibido na função Main
     public static int Menu()
     {
         int op = 0;
-        Console.WriteLine("Menu\n\n[1]- Criar tarefa\n[2]- Vizualizar Tarefas ativas\n[3]- Vizualizar Tarefas concluídas\n[4]- Cadastrar Pessoas\n[5]- Cadastrar Categorias\n[6]- Sair");
-        while (!int.TryParse(Console.ReadLine(), out op))
+        try
         {
-            Console.Clear();
-            Console.WriteLine("Menu\n\n[1]- Criar tarefa\n[2]- Vizualizar Tarefas ativas\n[3]- Vizualizar Tarefas concluídas\n[4]- Sair");
+            Console.WriteLine("Menu\n\n[1]- Criar tarefa\n[2]- Vizualizar Tarefas ativas\n[3]- Vizualizar Tarefas concluídas\n[4]- Cadastrar Pessoas\n[5]- Cadastrar Categorias\n[6]- Sair");
+            int.TryParse(Console.ReadLine(), out op);
         }
+        catch
+        {
+            
+        }
+        //while (!int.TryParse(Console.ReadLine(), out op))
+        //{
+        //    Console.Clear();
+        //    Console.WriteLine("Menu\n\n[1]- Criar tarefa\n[2]- Vizualizar Tarefas ativas\n[3]- Vizualizar Tarefas concluídas\n[4]- Sair");
+        //}
         return op;
     }
 
