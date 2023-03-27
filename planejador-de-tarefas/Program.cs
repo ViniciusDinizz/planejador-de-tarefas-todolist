@@ -141,7 +141,7 @@ internal class Program
     //Cria o objeto do tipo Person caso não tenha, e seta o proprietário da tarefa. Utilizada na função "CreateTask"
     public static int ChosingOwner(List<Person> person)
     {
-        int index = 0;
+        int index = -1;
         if (person.Count == 0)
         {
             Console.WriteLine("Não tem pessoas cadastradas.");
@@ -175,12 +175,12 @@ internal class Program
                     index = i;
                 }
             }
-            if(index == 0)
+            if (index == -1)
             {
                 Console.Write("ID incorreto...");
                 Thread.Sleep(1000);
-                index = -1;
             }
+            Console.Clear();
         }
 
         return index;
@@ -232,69 +232,38 @@ internal class Program
                         case "1":
                             Console.Write("Concluída Tarefa?[S]im || [N]ão: ");
                             var status = Console.ReadLine().ToUpper();
-                            if (status == "S")
-                            {
-                                end._status = true;
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            end.SetStatusyes(status);
                             break;
                         case "2":
-                            if (end._category == null)
-                            {
-                                Console.WriteLine("Categoria Atual: Sem Categoria.");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Categoria Atual: {end._category.ToCategory()}");
-                            }
-                            Console.Write("Deseja trocar? [S]im || [N]ão: ");
+                            Console.Clear();
+                            Console.WriteLine(end.ToString);
+                            Console.Write("Adicio ou Trocar Categoria? [S]im || [N]ão: ");
                             var category = Console.ReadLine().ToUpper();
-                            if (category == "S")
-                            {
-                                if (_category.Count == 0)
-                                {
-                                    Console.Write("Não existe categorias.Registrar uma? [S]im || [N]ão: ");
-                                    var registedCategory = Console.ReadLine().ToUpper();
-                                    if (registedCategory == "S")
-                                    {
-                                        Console.Write("Nome da categoria: ");
-                                        var categoryregister = Console.ReadLine().ToUpper();
-                                        _category.Add(new Category(categoryregister));
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                                Console.Clear();
-                                Console.WriteLine(end.ToString() + "\n");
-                                for (int i = 0; i < _category.Count; i++)
-                                {
-                                    Console.WriteLine(_category[i].ToCategory());
-                                }
-                                Console.Write("\n\nDigite o nome da categoria: ");
-                                var repeat = Console.ReadLine().ToUpper();
-                                for (int i = 0; i < _category.Count; i++)
-                                {
-                                    if (_category[i]._nameCategory == repeat)
-                                    {
-                                        end._category = _category[i];
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
+                            AddCategory(end,_category, category);
                             break;
                         case "3":
+                            Console.Clear();
+                            Console.WriteLine(end.ToString() + "\n");
+                            Console.WriteLine("### Definir data de entrega ###\n");
+                            Console.Write("Dia: ");
+                            int _day = int.Parse(Console.ReadLine());
+                            Console.Write("Mês: ");
+                            int _month = int.Parse(Console.ReadLine());
+                            Console.Write("Ano: ");
+                            int _year = int.Parse(Console.ReadLine());
+                            end.SetDueTime(_year, _month, _day);
                             break;
                         case "4":
+                            Console.Clear();
+                            Console.WriteLine("### ADICIONAR COLABORADORES ###\n");
+                            Console.WriteLine(end.ToString() + "\n");
+                            Console.Write("[A]dicionar colaboradores || [R]emover colaboradores: ");
+                            var positioncolaboratores = Console.ReadLine().ToUpper();
+                            end = EditColaboratores(end, positioncolaboratores,persons); //Testar funcionalidades "Case 4" e "case 3"
                             break;
                         case "5":
+                            Console.Write("\n\nSaindo da edição...");
+                            Thread.Sleep(1000);
                             break;
                         default:
                             Console.Write("Valor incorreto. Tente novamente...");
@@ -310,4 +279,132 @@ internal class Program
         }
         return end;
     }
+
+    //Editar colaboradores de uma tarefa, podendo adicionar um existente, adicionar um novo ou remover algum colaborador
+    private static ToDoList EditColaboratores(ToDoList end, string option, List<Person> persons)
+    {
+        if(option == "A")
+        {
+                for (int i = 0; i < persons.Count; i++)
+                {
+                    Console.WriteLine(persons[i].ToString());
+                }
+   
+      
+            Console.Write("\n\n[1]- Selecionar id || [2]- Adicionar novo: ");
+            var _addId = Console.ReadLine().ToUpper();
+            switch(_addId) 
+            {
+                case "1":
+                    Console.Write("\nId: ");
+                    var _setid = Console.ReadLine();
+                    while(!end.SetPersonExists(persons, _setid))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("### ADICIONAR COLABORADORES ###\n");
+                        Console.WriteLine(end.ToString);
+                        for (int i = 0; i < persons.Count; i++)
+                        {
+                            Console.WriteLine(persons[i].ToString());
+                        }
+                        Console.WriteLine("Digite um Id correto: ");
+                        _setid = Console.ReadLine();
+                    }
+                    break;
+                case "2":
+                    Console.Write("\nInforme o nome: ");
+                    var _setName = Console.ReadLine();
+                    Person personcopy = new Person(_setName);
+                    persons.Add(end.SetPerson(personcopy));
+                    break;
+                default:
+                    Console.Write("\nOpção inválida...");
+                    Thread.Sleep(1000);
+                    break;
+            }
+        }else if(option == "R")
+        {
+            if (end._morePeople.Count != 0) 
+            {
+                for (int i = 0; i < end._morePeople.Count; i++)
+                {
+                    Console.WriteLine(end._morePeople[i].ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nSem colaboradores.\n");
+                Thread.Sleep(1000);
+                return end;
+            }
+            
+            bool _infoId = false;
+            Console.Write("\nInforme o id: ");
+            var _setid = Console.ReadLine().ToUpper();
+            for(int i = 0;i < persons.Count;i++)
+            {
+                if (persons[i].ExistsPeson(_setid))
+                {
+                    end.RemovePersons(_setid);
+                    _infoId = true;
+                }
+            }
+            if(_infoId == false)
+            {
+                Console.Write("\nId incorreto...");
+                Thread.Sleep(1000);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Opção inválida.");
+            Thread.Sleep(1000);
+        }
+        return end;
+    }
+
+    //adicionar categoria na edição da tarefa "Case 2" da função SubMenu
+    public static void AddCategory (ToDoList end, List<Category> _category, string answer)
+    {
+        if (answer == "S")
+        {
+            if (_category.Count == 0)
+            {
+                Console.Write("Não existe categorias.Registrar uma? [S]im || [N]ão: ");
+                var registedCategory = Console.ReadLine().ToUpper();
+                if (registedCategory == "S")
+                {
+                    Console.Write("Nome da categoria: ");
+                    var categoryregister = Console.ReadLine().ToUpper();
+                    _category.Add(new Category(categoryregister));
+                }
+                else
+                {
+                    return;
+                }
+            }
+            Console.Clear();
+            Console.WriteLine(end.ToString() + "\n");
+            for (int i = 0; i < _category.Count; i++)
+            {
+                Console.WriteLine(_category[i].ToCategory());
+            }
+            Console.Write("\n\nDigite o nome da categoria: ");
+            var repeat = Console.ReadLine().ToUpper();
+            for (int i = 0; i < _category.Count; i++)
+            {
+                if (_category[i]._nameCategory == repeat)
+                {
+                    end._category = _category[i];
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+
+
 }

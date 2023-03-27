@@ -18,7 +18,13 @@ namespace planejador_de_tarefas
             _name = name;
         }
 
-        void SetName(string Name)
+        public Person(string id, string name) 
+        {
+            this._id = id;
+            this._name = name;
+        }
+
+        public void SetName(string Name)
         {
             this._name = Name;
         }
@@ -36,7 +42,7 @@ namespace planejador_de_tarefas
         }
         public string ToPerson()
         {
-            return $"{this._name}";
+            return $"{this._name}|{this._id}";
         }
         public override string ToString()
         { 

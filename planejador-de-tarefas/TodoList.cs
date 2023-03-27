@@ -12,9 +12,9 @@ namespace planejador_de_tarefas
         public string _description { get; set; }
         public Category? _category { get; set; }
         public Person _ownerPerson { get; set; }
-        public List<Person>? _morePeople { get; set; }
+        public List<Person> _morePeople = new List<Person>();
         public DateTime create { get; set; }
-        public DateTime? _dueTime { get; set; }
+        public DateOnly? _dueTime { get; set; }
         public bool _status { get; set; }
 
         public ToDoList(string Description, Person Owner)
@@ -32,6 +32,10 @@ namespace planejador_de_tarefas
         {
             return "";
         }
+        public void SetDueTime(int _year, int _month, int _day)
+        {
+            _dueTime = new DateOnly(_year, _month, _day);
+        }
 
         public override string ToString()
         {
@@ -48,21 +52,57 @@ namespace planejador_de_tarefas
             }
             return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Status:{this._status} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {category} | Contribuidores: {personss}";
         }
-        void SetStatus(string status)
+        public void SetStatusno(string status)
         {
             if(status.ToUpper() == "S")
             {
-                _status = true;
+                this._status = false;
             }
             else
             {
-                _status = false;
+                this._status = true;
+            }
+        }
+        public void SetStatusyes(string status)
+        {
+            if(status.ToUpper() == "S")
+            {
+                this._status = true;
+            }
+            else
+            {
+                this._status = false;
             }
         }
 
-        public void SetPerson(Person added)
+        public void RemovePersons(string id)
         {
-            this._morePeople.Add(added);
+            for(int i = 0; i < this._morePeople.Count; i++)
+            {
+                if (this._morePeople[i]._id == id)
+                {
+                    this._morePeople.RemoveAt(i);
+                }
+            }
+        }
+        public Person SetPerson (Person _newPerson)
+        {
+            this._morePeople.Add(_newPerson);
+            return _newPerson;
+        }
+        public bool SetPersonExists(List<Person> added, string id)
+        {
+            bool flag = false;
+            for(int i = 0; i < added.Count; i++)
+            {
+                if (added[i]._id == id)
+                {
+                    Person person = added[i];           
+                    _morePeople.Add(person);
+                    flag = true;
+                }
+            }
+            return flag;
         }
     }
 }
