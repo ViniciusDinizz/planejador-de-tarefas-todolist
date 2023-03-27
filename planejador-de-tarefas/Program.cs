@@ -7,6 +7,8 @@ internal class Program
     private static void Main(string[] args)
     {
         int _optionMenu = 0;
+        string task = "task.txt";
+        string people = "peolple.txt";
         List<ToDoList> _unfishinedTask = new List<ToDoList>();
         List<ToDoList> _completedTask = new List<ToDoList>();
         List<Person> _registerPerson = new List<Person>();
@@ -96,9 +98,10 @@ internal class Program
             }
         }
     }
-    private static void SaveToFile()
+    private static void SaveToFile(List<Person> p, string f)
     {
-        throw new NotImplementedException();
+        StreamWriter sw = new(f);
+
     }
 
     private static void CompletedTasks()
@@ -180,7 +183,6 @@ internal class Program
                 }
             }
         }
-
         return null;
     }
 

@@ -10,9 +10,9 @@ namespace planejador_de_tarefas
     {
         public string _nameCategory { get; set; }
 
-        public Category(string Category)
+        public Category()
         {
-            _nameCategory = Category;
+            _nameCategory = y;
         }
 
         public string ToCategory()
