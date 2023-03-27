@@ -10,9 +10,8 @@ namespace planejador_de_tarefas
     {
         public string _id { get; set; }
         public string _description { get; set; }
-        public Category? _category { get; set; }
+        public Category _category { get; set; }
         public Person _ownerPerson { get; set; }
-        public List<Person> _morePeople = new List<Person>();
         public DateTime create { get; set; }
         public DateOnly? _dueTime { get; set; }
         public bool _status { get; set; }
@@ -27,30 +26,31 @@ namespace planejador_de_tarefas
             _status = false;
         }
 
-
+        public void SetCategory(Category newcategory)
+        {
+            this._category = newcategory;
+        }
         public string ToFile()
         {
             return "";
         }
         public void SetDueTime(int _year, int _month, int _day)
         {
-            _dueTime = new DateOnly(_year, _month, _day);
+            this._dueTime = new DateOnly(_year, _month, _day);
         }
 
+        public void SetOwnerPerson(Person Owner)
+        {
+            this._ownerPerson = Owner;
+        }
         public override string ToString()
         {
-            string personss = "", category = "";
-            if (_morePeople != null )
+            string category = "";
+            if(_category != null)
             {
-                for (int i = 0; i < _morePeople.Count; i++)
-                {
-                    personss += _morePeople[i].ToPerson() + ",";
-                }
-            }else if(_category != null)
-            {
-                category = this._category.ToCategory();
+                category = _category._nameCategory.ToUpper();
             }
-            return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Status:{this._status} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {category} | Contribuidores: {personss}";
+            return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Data/Entrega: {this._dueTime} | Status:{this._status} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {category}";
         }
         public void SetStatusno(string status)
         {
@@ -75,34 +75,5 @@ namespace planejador_de_tarefas
             }
         }
 
-        public void RemovePersons(string id)
-        {
-            for(int i = 0; i < this._morePeople.Count; i++)
-            {
-                if (this._morePeople[i]._id == id)
-                {
-                    this._morePeople.RemoveAt(i);
-                }
-            }
-        }
-        public Person SetPerson (Person _newPerson)
-        {
-            this._morePeople.Add(_newPerson);
-            return _newPerson;
-        }
-        public bool SetPersonExists(List<Person> added, string id)
-        {
-            bool flag = false;
-            for(int i = 0; i < added.Count; i++)
-            {
-                if (added[i]._id == id)
-                {
-                    Person person = added[i];           
-                    _morePeople.Add(person);
-                    flag = true;
-                }
-            }
-            return flag;
-        }
     }
 }
