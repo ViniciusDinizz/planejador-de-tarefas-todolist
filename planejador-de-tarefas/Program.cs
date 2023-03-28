@@ -33,10 +33,10 @@ internal class Program
                     RegisterRemove(_registerPerson);
                     break;
                 case 5:
-                    SaveToFile();
+                    //SaveToFile();
                     break;
                 case 6:
-                    SaveToFile();
+                    //SaveToFile();
                     break;
                 default:
                     Console.WriteLine("Opção inválida mané.");
@@ -126,7 +126,9 @@ internal class Program
         }
         else
         {
-            _unfishinedTask.Add(new ToDoList(description, people));
+            ToDoList todo = new(description, people);
+            todo.SetCategory();
+            _unfishinedTask.Add(todo);
             Console.Write("\nCriando tarefa...");
             Thread.Sleep(2000);
         }
@@ -137,8 +139,8 @@ internal class Program
     {
         Console.Clear();
         Console.Write("Qual nome da pessoa: ");
-        var personregist = Console.ReadLine().ToUpper();
-        person.Add(new Person(personregist));
+        var nameperson = Console.ReadLine().ToUpper();
+        person.Add(new Person(nameperson));
     }
 
     //Cria o objeto do tipo Person caso não tenha, e seta o proprietário da tarefa. Utilizada na função "CreateTask"
@@ -233,7 +235,7 @@ internal class Program
                 {
                     Console.Clear();
                     Console.WriteLine(end.ToString());
-                    Console.WriteLine("\n[1]- Alterar Status\n[2]- Adicionar categoria\n[3]- Prazo de entrega\n[4]- Adicionar ou remover colaboradores\n[5]- Sair ");
+                    Console.WriteLine("\n[1]- Alterar Status\\n[2]- Prazo de entrega\n[3]- Sair ");
                     option = Console.ReadLine().ToUpper();
                     switch (option)
                     {
@@ -250,53 +252,7 @@ internal class Program
                             }
                             break;
                         case "2":
-                            if (end._category == null)
-                            {
-                                Console.WriteLine("Categoria Atual: Sem Categoria.");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Categoria Atual: {end._category.ToCategory()}");
-                            }
-                            Console.Write("Deseja trocar? [S]im || [N]ão: ");
-                            var category = Console.ReadLine().ToUpper();
-                            if (category == "S")
-                            {
-                                if (_category.Count == 0)
-                                {
-                                    Console.Write("Não existe categorias.Registrar uma? [S]im || [N]ão: ");
-                                    var registedCategory = Console.ReadLine().ToUpper();
-                                    if (registedCategory == "S")
-                                    {
-                                        Console.Write("Nome da categoria: ");
-                                        var categoryregister = Console.ReadLine().ToUpper();
-                                        _category.Add(new Category(categoryregister));
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                                Console.Clear();
-                                Console.WriteLine(end.ToString() + "\n");
-                                for (int i = 0; i < _category.Count; i++)
-                                {
-                                    Console.WriteLine(_category[i].ToCategory());
-                                }
-                                Console.Write("\n\nDigite o nome da categoria: ");
-                                var repeat = Console.ReadLine().ToUpper();
-                                for (int i = 0; i < _category.Count; i++)
-                                {
-                                    if (_category[i]._nameCategory == repeat)
-                                    {
-                                        end._category = _category[i];
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
+                                
                             break;
                         case "3":
                             break;

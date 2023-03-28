@@ -15,7 +15,7 @@ namespace planejador_de_tarefas
         public List<Person>? _morePeople { get; set; }
         public DateTime create { get; set; }
         public DateTime? _dueTime { get; set; }
-        public bool _status { get; set; }
+        public bool _status;
 
         public ToDoList(string Description, Person Owner)
         {
@@ -59,6 +59,18 @@ namespace planejador_de_tarefas
             
 
         }
+       
+        public string SetStatus()
+        {
+            if(_status == false )
+            {
+                return $"Não finalizada.";
+            }
+            else
+            {
+                return $"Finalizada";
+            }
+        }
         public override string ToString()
         {
             //string personss = "", category = "";
@@ -72,18 +84,8 @@ namespace planejador_de_tarefas
             //{
             //    category = this._category.ToCategory();
             //}
-            return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Status:{this._status} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {_category} | Contribuidores: {personss}";
-        }
-        void SetStatus(string status)
-        {
-            if(status.ToUpper() == "S")
-            {
-                _status = true;
-            }
-            else
-            {
-                _status = false;
-            }
+            
+            return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Status:{SetStatus()} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {_category} |";
         }
 
         public void SetPerson(Person added)

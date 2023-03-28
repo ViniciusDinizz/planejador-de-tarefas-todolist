@@ -8,24 +8,18 @@ namespace planejador_de_tarefas
 {
     internal class Person
     {
-        public string _name { get; set; }
+        public string Name { get; set; }
         public string _id { get; set; }
 
-        public Person(string name)
+        public Person(string n)
         {
             var key = Guid.NewGuid();
             _id = key.ToString().Substring(0, 4).ToUpper();
-            _name = name;
+            this.Name = n;
         }
-
-        void SetName(string Name)
-        {
-            this._name = Name;
-        }
-
         public bool ExistsPeson(string id)
         {
-            if(_id == id)
+            if (_id == id)
             {
                 return true;
             }
@@ -36,11 +30,11 @@ namespace planejador_de_tarefas
         }
         public string ToPerson()
         {
-            return $"{this._name}";
+            return $"{this.Name}";
         }
         public override string ToString()
-        { 
-            return $"Nome: {this._name} | Id: {this._id}";
+        {
+            return $"Nome: {this.Name} | Id: {this._id}";
         }
     }
 }
