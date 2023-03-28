@@ -17,6 +17,12 @@ namespace planejador_de_tarefas
             _id = key.ToString().Substring(0, 4).ToUpper();
             this.Name = n;
         }
+
+        public Person(string Name, string Id) 
+        {
+            this.Name = Name;
+            this._id = Id;
+        }
         public bool ExistsPeson(string id)
         {
             if (_id == id)
@@ -30,7 +36,7 @@ namespace planejador_de_tarefas
         }
         public string ToPerson()
         {
-            return $"{this.Name} , {_id}";
+            return $"{this.Name},{_id}";
         }
         public override string ToString()
         {
