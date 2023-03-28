@@ -105,7 +105,7 @@ internal class Program
         Console.Write("\nQual o proprietário - ");
         int people = ChosingOwner(person);
 
-        if (people == -1)
+        if (person.Count == 0)
         {
             Console.Write("\nNão é possivel concluir a tarefa sem proprietário...");
             Thread.Sleep(2000);
@@ -113,7 +113,9 @@ internal class Program
         }
         else
         {
-            _unfishinedTask.Add(new ToDoList(description, person[people]));
+            ToDoList todo = new(description, people);
+            todo.SetCategory();
+            _unfishinedTask.Add(todo);
             Console.Write("\nCriando tarefa...");
             Thread.Sleep(1000);
         }
@@ -139,9 +141,9 @@ internal class Program
     }
 
     //Cria o objeto do tipo Person caso não tenha, e seta o proprietário da tarefa. Utilizada na função "CreateTask"
-    public static int ChosingOwner(List<Person> person)
+    public static Person ChosingOwner(List<Person> person)
     {
-        int index = -1;
+        int index = 0;
         if (person.Count == 0)
         {
             Console.WriteLine("Não tem pessoas cadastradas.");
@@ -153,7 +155,7 @@ internal class Program
             }
             else
             {
-                return -1;
+                return null;
             }
         }
         else
@@ -200,11 +202,15 @@ internal class Program
     public static int Menu()
     {
         int op = 0;
-        Console.WriteLine("Menu\n\n[1]- Criar tarefa\n[2]- Vizualizar Tarefas ativas\n[3]- Vizualizar Tarefas concluídas\n[4]- Sair");
-        while (!int.TryParse(Console.ReadLine(), out op))
+        try
         {
-            Console.Clear();
             Console.WriteLine("Menu\n\n[1]- Criar tarefa\n[2]- Vizualizar Tarefas ativas\n[3]- Vizualizar Tarefas concluídas\n[4]- Sair");
+            int.TryParse(Console.ReadLine(), out op);
+
+        }
+        catch
+        {
+
         }
         return op;
     }
