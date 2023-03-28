@@ -52,17 +52,18 @@ namespace planejador_de_tarefas
                         Console.WriteLine("Opção não cadastrada!");
                         break;
                 }
-            }catch 
+            }
+            catch
             {
             }
             return null;
-            
+
 
         }
-       
+
         public string SetStatus()
         {
-            if(_status == false )
+            if (_status == false)
             {
                 return $"Não finalizada.";
             }
@@ -72,8 +73,8 @@ namespace planejador_de_tarefas
             }
         }
         public override string ToString()
-        { 
-            
+        {
+
             return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Status:{SetStatus()} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {_category} |";
         }
 
