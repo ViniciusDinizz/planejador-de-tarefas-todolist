@@ -10,11 +10,12 @@ namespace planejador_de_tarefas
     {
         public string _id { get; set; }
         public string _description { get; set; }
-        public Category _category { get; set; }
+        public string _category;
         public Person _ownerPerson { get; set; }
+        public List<Person>? _morePeople { get; set; }
         public DateTime create { get; set; }
-        public DateOnly? _dueTime { get; set; }
-        public bool _status { get; set; }
+        public DateTime? _dueTime { get; set; }
+        public bool _status;
 
         public ToDoList(string Description, Person Owner)
         {
@@ -22,58 +23,63 @@ namespace planejador_de_tarefas
             var key = Guid.NewGuid();
             _id = key.ToString().Substring(0, 4);
             _description = Description;
-            create = DateTime.UtcNow;
+            create = DateTime.Now;
             _status = false;
         }
 
-        public void SetCategory(Category newcategory)
-        {
-            this._category = newcategory;
-        }
+
         public string ToFile()
         {
-            return "";
-        }
-        public void SetDueTime(int _year, int _month, int _day)
-        {
-            this._dueTime = new DateOnly(_year, _month, _day);
+            return $"{this._description} ,{_id} ,{this.create}, {SetStatus()}, {this._ownerPerson.ToPerson()}, {_category}";
         }
 
-        public void SetOwnerPerson(Person Owner)
+        public string SetCategory()
         {
-            this._ownerPerson = Owner;
+            int op;
+            try
+            {
+                Console.WriteLine("Informe a catégoria para a tarefa!\n[1] Importante\n[2] Pessoal\n[3] Profissional");
+                int.TryParse(Console.ReadLine(), out op);
+                switch (op)
+                {
+                    case 1:
+                        return this._category = "Importante";
+                    case 2:
+                        return this._category = "Pessoal";
+                    case 3:
+                        return this._category = "Profissional";
+                    default:
+                        Console.WriteLine("Opção não cadastrada!");
+                        break;
+                }
+            }catch 
+            {
+            }
+            return null;
+            
+
+        }
+       
+        public string SetStatus()
+        {
+            if(_status == false )
+            {
+                return $"Não finalizada.";
+            }
+            else
+            {
+                return $"Finalizada";
+            }
         }
         public override string ToString()
-        {
-            string category = "";
-            if(_category != null)
-            {
-                category = _category._nameCategory.ToUpper();
-            }
-            return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Data/Entrega: {this._dueTime} | Status:{this._status} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {category}";
-        }
-        public void SetStatusno(string status)
-        {
-            if(status.ToUpper() == "S")
-            {
-                this._status = false;
-            }
-            else
-            {
-                this._status = true;
-            }
-        }
-        public void SetStatusyes(string status)
-        {
-            if(status.ToUpper() == "S")
-            {
-                this._status = true;
-            }
-            else
-            {
-                this._status = false;
-            }
+        { 
+            
+            return $"Descrição: {this._description} | ID: {_id} | Data/Inicio: {this.create} | Status:{SetStatus()} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {_category} |";
         }
 
+        public void SetPerson(Person added)
+        {
+            this._morePeople.Add(added);
+        }
     }
 }
