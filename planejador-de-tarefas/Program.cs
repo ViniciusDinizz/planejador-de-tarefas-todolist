@@ -113,7 +113,7 @@ internal class Program
         }
         else
         {
-            ToDoList todo = new(description, people);
+            ToDoList todo = new(description, person[people]);
             todo.SetCategory();
             _unfishinedTask.Add(todo);
             Console.Write("\nCriando tarefa...");
@@ -141,7 +141,7 @@ internal class Program
     }
 
     //Cria o objeto do tipo Person caso não tenha, e seta o proprietário da tarefa. Utilizada na função "CreateTask"
-    public static Person ChosingOwner(List<Person> person)
+    public static int ChosingOwner(List<Person> person)
     {
         int index = 0;
         if (person.Count == 0)
@@ -155,7 +155,7 @@ internal class Program
             }
             else
             {
-                return null;
+                return -1;
             }
         }
         else

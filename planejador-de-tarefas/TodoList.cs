@@ -51,7 +51,7 @@ namespace planejador_de_tarefas
         }
         public string ToFile()
         {
-            return $"{this._description},{_id} ,{this._dateCreateCop},{this._dueTimeCop},{SetStatus()},{this._ownerPerson.ToPerson()},{_category}";
+            return $"{this._description},{_id},{this._dateCreateCop},{this._dueTimeCop},{SetStatus()},{this._ownerPerson.ToPerson()},{_category}";
         }
 
         public string SetCategory()
