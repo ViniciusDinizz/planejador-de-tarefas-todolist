@@ -8,44 +8,44 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        int _optionMenu = 0;
-        string taskf = "task.txt";
-        List<ToDoList> task = new List<ToDoList>();
-        List<Person> _registerPerson = new List<Person>();
+        int optionMenu = 0;
+        string dataFile = "task.txt";
+        List<ToDoList> Task = new List<ToDoList>();
+        List<Person> RegisterPerson = new List<Person>();
 
-        ReadFile(taskf, _registerPerson, task);
+        ReadFile(dataFile, RegisterPerson, Task);
 
 
         do
         {
             Console.Clear();
-            _optionMenu = Menu();
-            switch (_optionMenu)
+            optionMenu = Menu();
+            switch (optionMenu)
             {
                 case 1:
-                    CreateTask(task, _registerPerson);
+                    CreateTask(Task, RegisterPerson);
                     break;
                 case 2:
-                    ViewActiveTasks(task, _registerPerson);
+                    ViewActiveTasks(Task, RegisterPerson, dataFile);
                     break;
                 case 3:
-                    ViewCompletedTasks(task);
+                    ViewCompletedTasks(Task, dataFile);
                     break;
                 case 4:
-                    SaveTaskToFile(task, taskf);
+                    SaveTaskToFile(Task, dataFile);
                     break;
                 default:
                     Console.WriteLine("Opção inválida mané.");
                     break;
             }
-        } while (_optionMenu != 4);
+        } while (optionMenu != 4);
     }
 
-    private static void ReadFile(string taskf, List<Person> registerPerson, List<ToDoList> _initial)
+    private static void ReadFile(string dataFile, List<Person> RegisterPerson, List<ToDoList> Tasks)
     {
-        if(!File.Exists(taskf)) 
+        if(!File.Exists(dataFile)) 
         {
-            StreamWriter sw = new StreamWriter(taskf);
+            StreamWriter sw = new StreamWriter(dataFile);
             sw.Close();
             Console.Write("Criando lista...");
             Thread.Sleep(1000);
@@ -53,27 +53,27 @@ internal class Program
         }
         else
         {
-            StreamReader sr = new StreamReader(taskf);
+            StreamReader sr = new StreamReader(dataFile);
             while(!sr.EndOfStream)
             {
                 string[] _position = sr.ReadLine().Split(",");
                 Person _newPerson = new Person(_position[5], _position[6]);
                 ToDoList newTask = new ToDoList(_position[0], _position[1], _position[2], _position[3], _position[4], _newPerson ,_position[7]);
-                _initial.Add(newTask);
-                registerPerson.Add(_newPerson);
+                Tasks.Add(newTask);
+                RegisterPerson.Add(_newPerson);
             }
             sr.Close();
         }
     }
 
-    private static void SaveTaskToFile(List<ToDoList> p, string f)
+    private static void SaveTaskToFile(List<ToDoList> Tasks, string dataFile)
     {
         try
         {
-            StreamWriter sw = new(f);
-            if (File.Exists(f))
+            StreamWriter sw = new(dataFile);
+            if (File.Exists(dataFile))
             {
-                foreach (var i in p)
+                foreach (var i in Tasks)
                 {
                     sw.WriteLine(i.ToFile());
                 }
@@ -81,7 +81,7 @@ internal class Program
             }
             else
             {
-                foreach (var i in p)
+                foreach (var i in Tasks)
                 {
                     sw.WriteLine(i.ToFile());
                 }
@@ -97,15 +97,15 @@ internal class Program
 
 
     //Cria e aloca um objeto do tipo TodoList
-    private static void CreateTask(List<ToDoList> _unfishinedTask, List<Person> person)
+    private static void CreateTask(List<ToDoList> Tasks, List<Person> Person)
     {
         Console.Clear();
         Console.Write("### Cadastrando Tarefa ###\n\nQual a descricao da tarefa: ");
         var description = Console.ReadLine().ToUpper();
         Console.Write("\nQual o proprietário - ");
-        int people = ChosingOwner(person);
+        int people = ChosingOwner(Person);
 
-        if (person.Count == 0)
+        if (Person.Count == 0)
         {
             Console.Write("\nNão é possivel concluir a tarefa sem proprietário...");
             Thread.Sleep(2000);
@@ -113,26 +113,26 @@ internal class Program
         }
         else
         {
-            ToDoList todo = new(description, people);
+            ToDoList todo = new(description, Person[people]);
             todo.SetCategory();
-            _unfishinedTask.Add(todo);
+            Tasks.Add(todo);
             Console.Write("\nCriando tarefa...");
             Thread.Sleep(1000);
         }
     }
 
     //Aloca um objeto da classe Person
-    public static int RegistPerson(List<Person> person)
+    public static int RegistPerson(List<Person> Person)
     {
         int _indice = 0;
         Console.Clear();
         Console.Write("Qual nome da pessoa: ");
         var personregist = Console.ReadLine().ToUpper();
         Person newPerson = new Person(personregist);
-        person.Add(newPerson);
-        for (int i = 0; i < person.Count; i++)
+        Person.Add(newPerson);
+        for (int i = 0; i < Person.Count; i++)
         {
-            if (person[i]._id == newPerson._id)
+            if (Person[i].Id == newPerson.Id)
             {
                 _indice = i;
             }
@@ -141,29 +141,29 @@ internal class Program
     }
 
     //Cria o objeto do tipo Person caso não tenha, e seta o proprietário da tarefa. Utilizada na função "CreateTask"
-    public static Person ChosingOwner(List<Person> person)
+    public static int ChosingOwner(List<Person> Person)
     {
         int index = 0;
-        if (person.Count == 0)
+        if (Person.Count == 0)
         {
             Console.WriteLine("Não tem pessoas cadastradas.");
             Console.Write($"Deseja cadastrar? [S]IM | [N]AO: ");
             var registersucess = Console.ReadLine().ToUpper();
             if (registersucess == "S")
             {
-                return RegistPerson(person);
+                return RegistPerson(Person);
             }
             else
             {
-                return null;
+                return -1;
             }
         }
         else
         {
             Console.WriteLine("\n\n# Pessoas #\n");
-            for (int i = 0; i < person.Count; i++)
+            for (int i = 0; i < Person.Count; i++)
             {
-                Console.WriteLine(person[i].ToString());
+                Console.WriteLine(Person[i].ToString());
             }
             Console.Write("\n\n[1]- Id existente || [2]- Nova pessoa: ");
             var _setnewPerson = Console.ReadLine().ToUpper();
@@ -173,9 +173,9 @@ internal class Program
                     int _count = 0;
                     Console.Write("\nID: ");
                     var _setId = Console.ReadLine().ToUpper();
-                    for (int i = 0; i < person.Count; i++)
+                    for (int i = 0; i < Person.Count; i++)
                     {
-                        if (person[i]._id == _setId)
+                        if (Person[i].Id == _setId)
                         {
                             return i;
                         }
@@ -187,7 +187,7 @@ internal class Program
                     }
                     break;
                 case "2":
-                    return RegistPerson(person);
+                    return RegistPerson(Person);
                     break;
                 default:
                     Console.Write("\nOpção inválida");
@@ -216,15 +216,16 @@ internal class Program
     }
 
     //Percorrendo as tarefas não concluídas, e pode fazer alterações
-    private static void ViewCompletedTasks(List<ToDoList> list)
+    private static void ViewCompletedTasks(List<ToDoList> Tasks, string dataFile)
     {
         int _count = 0;
-        for (int i = 0; i < list.Count; i++)
+        for (int i = 0; i < Tasks.Count; i++)
         {
-            if (list[i]._status != false)
+            if (Tasks[i].Status != false)
             {
-                list[i] = SubMenuStatus(list[i]);
+                Tasks[i] = SubMenuStatus(Tasks[i]);
                 _count++;
+                SaveTaskToFile(Tasks, dataFile);
             }
         }
         if (_count == 0)
@@ -235,15 +236,16 @@ internal class Program
     }
 
     //Percorrendo as tarefas não concluídas, e pode fazer alterações
-    public static void ViewActiveTasks(List<ToDoList> _activeTasks, List<Person> _persons)
+    public static void ViewActiveTasks(List<ToDoList> Tasks, List<Person> Persons, string dataFile)
     {
         int _count = 0;
-        for (int i = 0; i < _activeTasks.Count; i++)
+        for (int i = 0; i < Tasks.Count; i++)
         {
-            if (_activeTasks[i]._status == false)
+            if (Tasks[i].Status == false)
             {
-                _activeTasks[i] = SubMenu(_activeTasks[i], _persons);
+                Tasks[i] = SubMenu(Tasks[i], Persons);
                 _count++;
+                SaveTaskToFile(Tasks, dataFile);
             }
         }
         if (_count == 0)
@@ -255,14 +257,14 @@ internal class Program
     }
 
     //Submenu utilizado para alterações ma função "ViewActiveTasks"
-    public static ToDoList SubMenu(ToDoList end, List<Person> persons)
+    public static ToDoList SubMenu(ToDoList End, List<Person> Persons)
     {
         bool altering = false;
         string option = "";
         while (!altering)
         {
             Console.Clear();
-            Console.WriteLine(end.ToString() + "\n");
+            Console.WriteLine(End.ToString() + "\n");
             Console.Write("Deseja editar a tarefa: [S]im || [N]ão: ");
             var condition = Console.ReadLine().ToUpper();
             if (condition == "S")
@@ -270,7 +272,7 @@ internal class Program
                 while (option != "5")
                 {
                     Console.Clear();
-                    Console.WriteLine(end.ToString());
+                    Console.WriteLine(End.ToString());
                     Console.WriteLine("\n[1]- Alterar Status\n[2]- Adicionar categoria\n[3]- Prazo de entrega\n[4]- Trocar Proprietário\n[5]- Sair ");
                     option = Console.ReadLine().ToUpper();
                     switch (option)
@@ -278,21 +280,21 @@ internal class Program
                         case "1":
                             Console.Write("Concluída Tarefa?[S]im || [N]ão: ");
                             var status = Console.ReadLine().ToUpper();
-                            end.GetStatus(status);
+                            End.GetStatus(status);
                             break;
                         case "2":
                             Console.Clear();
-                            Console.WriteLine(end.ToString());
+                            Console.WriteLine(End.ToString());
                             Console.Write("\nAdicionar ou Trocar Categoria? [S]im || [N]ão: ");
                             var _setCategory = Console.ReadLine().ToUpper();
                             if (_setCategory == "S")
                             {
-                                end.SetCategory();
+                                End.SetCategory();
                             }
                             break;
                         case "3":
                             Console.Clear();
-                            Console.WriteLine(end.ToString() + "\n");
+                            Console.WriteLine(End.ToString() + "\n");
                             Console.WriteLine("### Definir data de entrega ###\n");
                             Console.Write("Dia: ");
                             int _day = int.Parse(Console.ReadLine());
@@ -300,15 +302,15 @@ internal class Program
                             int _month = int.Parse(Console.ReadLine());
                             Console.Write("Ano: ");
                             int _year = int.Parse(Console.ReadLine());
-                            end.SetDueTime(_year, _month, _day);
+                            End.SetDueTime(_year, _month, _day);
                             break;
                         case "4":
                             Console.Clear();
                             Console.WriteLine("### TROCAR PROPRIETÁRIO ###\n");
-                            Console.WriteLine(end.ToString() + "\n\n" + $"Proprietário atual: {end._ownerPerson}");
+                            Console.WriteLine(End.ToString() + "\n\n" + $"Proprietário atual: {End.OwnerPerson}");
                             Console.Write("\n\nAdicionar novo proprietário para tarefa? [S]im || [N]ão: ");
                             var positioncolaboratores = Console.ReadLine().ToUpper();
-                            end = EditColaboratores(end, positioncolaboratores, persons);
+                            End = EditColaboratores(End, positioncolaboratores, Persons);
                             break;
                         case "5":
                             Console.Write("\n\nSaindo da edição...");
@@ -326,16 +328,16 @@ internal class Program
                 altering = true;
             }
         }
-        return end;
+        return End;
     }
-    private static ToDoList EditColaboratores(ToDoList end, string option, List<Person> persons)
+    private static ToDoList EditColaboratores(ToDoList End, string option, List<Person> Persons)
     {
         if (option == "S")
         {
             Console.WriteLine("\n# Colaboradores #\n");
-            for (int i = 0; i < persons.Count; i++)
+            for (int i = 0; i < Persons.Count; i++)
             {
-                Console.WriteLine(persons[i].ToString());
+                Console.WriteLine(Persons[i].ToString());
             }
 
             Console.Write("\n\n[1]- Inserir Id existente || [2]- Inserir nova pessoa : ");
@@ -345,11 +347,11 @@ internal class Program
                 int _cont = 0;
                 Console.Write("\nId: ");
                 var _SetId = Console.ReadLine().ToUpper();
-                for (int i = 0; i < persons.Count; i++)
+                for (int i = 0; i < Persons.Count; i++)
                 {
-                    if (persons[i]._id == _SetId)
+                    if (Persons[i].Id == _SetId)
                     {
-                        end.SetOwner(persons[i]);
+                        End.SetOwner(Persons[i]);
                         _cont++;
                     }
                 }
@@ -364,23 +366,23 @@ internal class Program
                 Console.Write("Nome da pessoa: ");
                 var _setNewPerson = Console.ReadLine().ToUpper();
                 Person newPerson = new Person(_setNewPerson);
-                persons.Add(newPerson);
-                end.SetOwner(newPerson);
+                Persons.Add(newPerson);
+                End.SetOwner(newPerson);
             }
         }
-        return end;
+        return End;
     }
 
-    public static ToDoList SubMenuStatus(ToDoList end)
+    public static ToDoList SubMenuStatus(ToDoList End)
     {
         Console.Clear();
-        Console.WriteLine(end.ToString() + "\n");
+        Console.WriteLine(End.ToString() + "\n");
         Console.Write("Deseja editar a tarefa: [S]im || [N]ão: ");
         var condition = Console.ReadLine().ToUpper();
         if (condition == "S")
         {
             Console.Clear();
-            Console.WriteLine(end.ToString() + "\n");
+            Console.WriteLine(End.ToString() + "\n");
             Console.Write("\n[1]- Alterar Status\n[2]- Sair: ");
             var option = Console.ReadLine().ToUpper();
             switch (option)
@@ -388,7 +390,7 @@ internal class Program
                 case "1":
                     Console.Write("\nTarefa Concluída ? [S]im || [N]ão: ");
                     var _setStatus = Console.ReadLine().ToUpper();
-                    end.GetStatus(_setStatus);
+                    End.GetStatus(_setStatus);
                     break;
                 case "2":
                     Console.Write("Saindo...");
@@ -401,7 +403,7 @@ internal class Program
             }
 
         }
-        return end;
+        return End;
     }
 
 }

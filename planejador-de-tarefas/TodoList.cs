@@ -8,50 +8,50 @@ namespace planejador_de_tarefas
 {
     internal class ToDoList
     {
-        public string _id { get; set; }
-        public string _description { get; set; }
-        public string _category;
-        public Person _ownerPerson { get; set; }
-        public DateTime? _create { get; set; }
-        public DateTime? _dueTime { get; set; }
-        public bool _status;
-        string _dateCreateCop = "", _dueTimeCop = "";
+        public string Id { get; set; }
+        public string Description { get; set; }
+        public string Category;
+        public Person OwnerPerson { get; set; }
+        public DateTime? Create { get; set; }
+        public DateTime? DueTime { get; set; }
+        public bool Status;
+        string dateCreate = "", dueTime = "";
 
-        public ToDoList(string Description, Person Owner)
+        public ToDoList(string description, Person owner)
         {
-            _ownerPerson = Owner;
+            OwnerPerson = owner;
             var key = Guid.NewGuid();
-            _id = key.ToString().Substring(0, 4);
-            _description = Description;
-            _create = DateTime.Now;
-            _status = false;
+            Id = key.ToString().Substring(0, 4);
+            Description = description;
+            Create = DateTime.Now;
+            Status = false;
         }
 
-        public ToDoList(string Desciption, string Id, string DateTime, string DueTime, string status, Person loadPerson, string Category)
+        public ToDoList(string desciption, string id, string dateTime, string dueTime, string status, Person loadPerson, string category)
         {
-            this._description = Desciption;
-            this._id = Id;
-            this._dateCreateCop = DateTime;
-            this._dueTimeCop = DueTime;
+            this.Description = desciption;
+            this.Id = id;
+            this.dateCreate = dateTime;
+            this.dueTime = dueTime;
             if (status == "Não finalizada.")
             {
-                this._status = false;
+                this.Status = false;
             }
             else
             {
-                this._status = true;
+                this.Status = true;
             }
-            this._ownerPerson = loadPerson;
-            this._category = Category;
+            this.OwnerPerson = loadPerson;
+            this.Category = Category;
         }
 
         public void SetDueTime(int year, int month, int day)
         {
-            _dueTime = new DateTime(year, month, day);
+            DueTime = new DateTime(year, month, day);
         }
         public string ToFile()
         {
-            return $"{this._description},{_id} ,{this._dateCreateCop},{this._dueTimeCop},{SetStatus()},{this._ownerPerson.ToPerson()},{_category}";
+            return $"{this.Description},{Id},{this.dateCreate},{this.DueTime},{SetStatus()},{this.OwnerPerson.ToPerson()},{Category}";
         }
 
         public string SetCategory()
@@ -65,11 +65,11 @@ namespace planejador_de_tarefas
                 switch (op)
                 {
                     case 1:
-                        return this._category = "Importante";
+                        return this.Category = "Importante";
                     case 2:
-                        return this._category = "Pessoal";
+                        return this.Category = "Pessoal";
                     case 3:
-                        return this._category = "Profissional";
+                        return this.Category = "Profissional";
                     default:
                         Console.WriteLine("Opção não cadastrada!");
                         break;
@@ -87,17 +87,17 @@ namespace planejador_de_tarefas
         {
             if (status == "S")
             {
-                this._status = true;
+                this.Status = true;
             }
             else
             {
-                this._status = false;
+                this.Status = false;
             }
         }
 
         public string SetStatus()
         {
-            if (_status == false)
+            if (this.Status == false)
             {
                 return $"Não finalizada.";
             }
@@ -108,21 +108,21 @@ namespace planejador_de_tarefas
         }
         public override string ToString()
         {
-            if (_create != null)
+            if (Create != null)
             {
-                this._dateCreateCop = _create.ToString();
+                this.dateCreate = Create.ToString();
             }
-            if (_dueTime != null)
+            if (DueTime != null)
             {
-                this._dueTimeCop = _dueTime.ToString();
+                this.dueTime = DueTime.ToString();
             }
 
-            return $"Descrição: {this._description} | ID: {this._id} | Data/Inicio: {this._dateCreateCop} | Data/termino: {this._dueTimeCop} | Status:{SetStatus()} | Proprietário: {this._ownerPerson.ToPerson()} | Categoria: {_category} |";
+            return $"Descrição: {this.Description} | ID: {this.Id} | Data/Inicio: {this.dateCreate} | Data/termino: {this.dueTime} | Status:{SetStatus()} | Proprietário: {this.OwnerPerson.ToPerson()} | Categoria: {Category} |";
         }
 
         public void SetOwner(Person added)
         {
-            this._ownerPerson = added;
+            this.OwnerPerson = added;
         }
 
 

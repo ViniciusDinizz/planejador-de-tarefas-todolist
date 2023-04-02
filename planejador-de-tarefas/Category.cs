@@ -8,21 +8,21 @@ namespace planejador_de_tarefas
 {
     internal class Category
     {
-        public string _nameCategory { get; set; }
+        public string NameCategory { get; set; }
 
         public Category(string Category)
         {
-            _nameCategory = Category;
+            NameCategory = Category;
         }
 
         public string ToCategory()
         {
-            if (_nameCategory == null)
+            if (NameCategory == null)
             {
                 return "vazio";
             }
             else {
-                return $"{_nameCategory}";
+                return $"{NameCategory}";
             }
         }
     }
